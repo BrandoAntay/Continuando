@@ -33,24 +33,21 @@ export const GroupsAdmin = () => {
   const [editingImage, setEditingImage] = useState<GroupImage | null>(null);
   const [formData, setFormData] = useState({
     image: "",
-    alt: "",
     caption: "",
   });
 
   const resetForm = () => {
     setFormData({
       image: "",
-      alt: "",
       caption: "",
     });
   };
 
   const handleAdd = () => {
-    if (!formData.image || !formData.alt || !formData.caption) return;
+    if (!formData.image || !formData.caption) return;
 
     add({
       image: formData.image,
-      alt: formData.alt,
       caption: formData.caption,
       active: true,
     });
@@ -63,18 +60,15 @@ export const GroupsAdmin = () => {
     setEditingImage(image);
     setFormData({
       image: image.image,
-      alt: image.alt,
       caption: image.caption,
     });
   };
 
   const handleUpdate = () => {
-    if (!editingImage || !formData.image || !formData.alt || !formData.caption)
-      return;
+    if (!editingImage || !formData.image || !formData.caption) return;
 
     update(editingImage.id, {
       image: formData.image,
-      alt: formData.alt,
       caption: formData.caption,
       active: editingImage.active,
     });
@@ -147,19 +141,6 @@ export const GroupsAdmin = () => {
                 </div>
               </div>
 
-              {/* Campo Alt */}
-              <div className="space-y-2">
-                <Label htmlFor="alt-add">Texto alternativo</Label>
-                <Input
-                  id="alt-add"
-                  value={formData.alt}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, alt: e.target.value }))
-                  }
-                  placeholder="Descripción de la imagen para accesibilidad"
-                />
-              </div>
-
               {/* Campo Caption */}
               <div className="space-y-2">
                 <Label htmlFor="caption-add">Texto de la imagen</Label>
@@ -189,9 +170,7 @@ export const GroupsAdmin = () => {
                 </Button>
                 <Button
                   onClick={handleAdd}
-                  disabled={
-                    !formData.image || !formData.alt || !formData.caption
-                  }
+                  disabled={!formData.image || !formData.caption}
                   className="bg-blue-600 hover:bg-blue-700"
                 >
                   Agregar
@@ -219,12 +198,11 @@ export const GroupsAdmin = () => {
               >
                 <img
                   src={image.image}
-                  alt={image.alt}
+                  alt=""
                   className="w-16 h-16 object-cover rounded"
                 />
                 <div className="flex-1">
-                  <h4 className="font-medium text-gray-900">{image.alt}</h4>
-                  <p className="text-sm text-gray-600">{image.caption}</p>
+                  <h4 className="font-medium text-gray-900">{image.caption}</h4>
                 </div>
                 <div className="flex space-x-2">
                   <Button
@@ -317,19 +295,6 @@ export const GroupsAdmin = () => {
               </div>
             </div>
 
-            {/* Campo Alt */}
-            <div className="space-y-2">
-              <Label htmlFor="alt-edit">Texto alternativo</Label>
-              <Input
-                id="alt-edit"
-                value={formData.alt}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, alt: e.target.value }))
-                }
-                placeholder="Descripción de la imagen para accesibilidad"
-              />
-            </div>
-
             {/* Campo Caption */}
             <div className="space-y-2">
               <Label htmlFor="caption-edit">Texto de la imagen</Label>
@@ -356,7 +321,7 @@ export const GroupsAdmin = () => {
               </Button>
               <Button
                 onClick={handleUpdate}
-                disabled={!formData.image || !formData.alt || !formData.caption}
+                disabled={!formData.image || !formData.caption}
                 className="bg-blue-600 hover:bg-blue-700"
               >
                 Actualizar
