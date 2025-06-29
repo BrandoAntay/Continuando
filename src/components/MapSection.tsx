@@ -70,15 +70,14 @@ export const MapSection = () => {
           {/* Botón para ver mapa en grande */}
           <div className="text-center">
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-              <DialogTrigger asChild>
-                <Button
-                  size="lg"
-                  className="bg-park-blue hover:bg-park-blue/90 text-white px-8 py-3 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg"
-                >
-                  <Expand className="mr-2 h-5 w-5" />
-                  Ver mapa en grande
-                </Button>
-              </DialogTrigger>
+              <Button
+                size="lg"
+                className="bg-park-blue hover:bg-park-blue/90 text-white px-8 py-3 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg"
+                onClick={() => setIsModalOpen(true)}
+              >
+                <Expand className="mr-2 h-5 w-5" />
+                Ver mapa en grande
+              </Button>
 
               {/* Modal con mapa ampliado */}
               <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 overflow-hidden">
