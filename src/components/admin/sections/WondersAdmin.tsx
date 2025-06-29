@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { Plus, Edit, Trash2, EyeOff, Upload, Globe } from "lucide-react";
+import { Plus, Edit, Trash2, EyeOff, Eye, Upload, Globe } from "lucide-react";
 import type { Wonder } from "@/lib/adminStorage";
 
 export const WondersAdmin = () => {
@@ -87,6 +87,13 @@ export const WondersAdmin = () => {
 
   const handleDelete = (id: number) => {
     remove(id);
+  };
+
+  const handleToggleActive = (id: number) => {
+    const wonder = wonders.find((w) => w.id === id);
+    if (wonder) {
+      update(id, { active: !wonder.active });
+    }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -223,78 +230,81 @@ export const WondersAdmin = () => {
       </div>
 
       {/* Lista de tarjetas */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Globe className="w-5 h-5 text-blue-600" />
-            <span>Lista de Tarjetas de Maravillas</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {wonders.map((wonder) => (
-              <div
-                key={wonder.id}
-                className="flex items-center space-x-4 p-4 border rounded-lg bg-white border-gray-200"
-              >
-                <img
-                  src={wonder.image}
-                  alt={wonder.name}
-                  className="w-16 h-16 object-cover rounded"
-                />
-                <div className="flex-1">
-                  <h4 className="font-medium text-gray-900">{wonder.name}</h4>
-                  <p className="text-sm text-gray-600">{wonder.description}</p>
-                </div>
-                <div className="flex space-x-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleEdit(wonder)}
-                  >
-                    <Edit className="w-4 h-4" />
-                    Editar
-                  </Button>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {wonders.map((wonder) => (
+          <div
+            key={wonder.id}
+            className={`bg-white rounded-lg shadow-lg overflow-hidden ${!wonder.active ? "opacity-50" : ""}`}
+          >
+            <img
+              src={wonder.image}
+              alt={wonder.name}
+              className="w-full h-48 object-cover"
+            />
+            <div className="p-4">
+              <p className="text-sm text-park-orange mb-2">
+                {wonder.description}
+              </p>
+              <h3 className="font-bold text-park-blue mb-4">{wonder.name}</h3>
 
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button size="sm" variant="destructive">
-                        <Trash2 className="w-4 h-4" />
+              {/* Botones de acción */}
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => handleEdit(wonder)}
+                  className="flex-1 bg-blue-500 hover:bg-blue-600 text-white text-sm py-2 px-3 rounded flex items-center justify-center space-x-1"
+                >
+                  <Edit className="w-4 h-4" />
+                  <span>Editar</span>
+                </button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <button className="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm py-2 px-3 rounded flex items-center justify-center space-x-1">
+                      <Trash2 className="w-4 h-4" />
+                      <span>Eliminar</span>
+                    </button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>¿Eliminar tarjeta?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Esta acción no se puede deshacer. La tarjeta se
+                        eliminará permanentemente.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => handleDelete(wonder.id)}
+                        className="bg-red-600 hover:bg-red-700"
+                      >
                         Eliminar
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>¿Eliminar tarjeta?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Esta acción no se puede deshacer. La tarjeta se
-                          eliminará permanentemente.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleDelete(wonder.id)}
-                          className="bg-red-600 hover:bg-red-700"
-                        >
-                          Eliminar
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+                <button
+                  onClick={() => handleToggleActive(wonder.id)}
+                  className={`flex-1 text-white text-sm py-2 px-3 rounded flex items-center justify-center space-x-1 ${wonder.active ? "bg-gray-500 hover:bg-gray-600" : "bg-green-500 hover:bg-green-600"}`}
+                >
+                  {wonder.active ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                  <span>{wonder.active ? "Ocultar" : "Mostrar"}</span>
+                </button>
               </div>
-            ))}
-
-            {wonders.length === 0 && (
-              <div className="text-center py-8 text-gray-500">
-                No hay maravillas. Haz clic en "Agregar" para añadir la primera
-                maravilla.
-              </div>
-            )}
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        ))}
+      </div>
+
+      {wonders.length === 0 && (
+        <div className="text-center py-8 text-gray-500">
+          No hay maravillas. Haz clic en "Agregar" para añadir la primera
+          maravilla.
+        </div>
+      )}
 
       {/* Modal de edición */}
       <Dialog
