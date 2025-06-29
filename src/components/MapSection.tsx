@@ -55,7 +55,7 @@ export const MapSection = () => {
             />
 
             {/* Overlay con información */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none">
               <div className="absolute bottom-4 left-4 right-4 text-white">
                 <h3 className="text-xl font-semibold mb-2">
                   Recorrido Sugerido
