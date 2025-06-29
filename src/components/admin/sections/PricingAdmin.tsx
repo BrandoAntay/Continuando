@@ -23,7 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { Plus, Edit, Trash2, EyeOff, Eye, DollarSign } from "lucide-react";
+import { Plus, Edit, Trash2, DollarSign } from "lucide-react";
 import type { PriceOption } from "@/lib/adminStorage";
 
 const colorOptions = [
@@ -98,13 +98,6 @@ export const PricingAdmin = () => {
 
   const handleDelete = (id: number) => {
     remove(id);
-  };
-
-  const handleToggleActive = (id: number) => {
-    const option = priceOptions.find((opt) => opt.id === id);
-    if (option) {
-      update(id, { active: !option.active });
-    }
   };
 
   const formatPrice = (price: number) => {
@@ -247,7 +240,7 @@ export const PricingAdmin = () => {
         {priceOptions.map((option) => (
           <div
             key={option.id}
-            className={`bg-white rounded-lg shadow-lg overflow-hidden ${!option.active ? "opacity-50" : ""}`}
+            className="bg-white rounded-lg shadow-lg overflow-hidden"
           >
             <div className="p-4 text-center">
               <div
@@ -301,17 +294,6 @@ export const PricingAdmin = () => {
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-                <button
-                  onClick={() => handleToggleActive(option.id)}
-                  className={`flex-1 text-white text-sm py-2 px-3 rounded flex items-center justify-center space-x-1 ${option.active ? "bg-gray-500 hover:bg-gray-600" : "bg-green-500 hover:bg-green-600"}`}
-                >
-                  {option.active ? (
-                    <EyeOff className="w-4 h-4" />
-                  ) : (
-                    <Eye className="w-4 h-4" />
-                  )}
-                  <span>{option.active ? "Ocultar" : "Mostrar"}</span>
-                </button>
               </div>
             </div>
           </div>

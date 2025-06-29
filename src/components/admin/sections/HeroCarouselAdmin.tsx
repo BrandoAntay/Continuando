@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { Plus, Edit, Trash2, EyeOff, Eye, Upload, Camera } from "lucide-react";
+import { Plus, Edit, Trash2, Upload, Camera } from "lucide-react";
 import type { HeroSlide } from "@/lib/adminStorage";
 
 export const HeroCarouselAdmin = () => {
@@ -79,13 +79,6 @@ export const HeroCarouselAdmin = () => {
 
   const handleDelete = (id: number) => {
     remove(id);
-  };
-
-  const handleToggleActive = (id: number) => {
-    const slide = slides.find((s) => s.id === id);
-    if (slide) {
-      update(id, { active: !slide.active });
-    }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -234,7 +227,7 @@ export const HeroCarouselAdmin = () => {
         {slides.map((slide) => (
           <div
             key={slide.id}
-            className={`bg-white rounded-lg shadow-lg overflow-hidden ${!slide.active ? "opacity-50" : ""}`}
+            className="bg-white rounded-lg shadow-lg overflow-hidden"
           >
             <img
               src={slide.image}
@@ -283,17 +276,6 @@ export const HeroCarouselAdmin = () => {
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-                <button
-                  onClick={() => handleToggleActive(slide.id)}
-                  className={`flex-1 text-white text-sm py-2 px-3 rounded flex items-center justify-center space-x-1 ${slide.active ? "bg-gray-500 hover:bg-gray-600" : "bg-green-500 hover:bg-green-600"}`}
-                >
-                  {slide.active ? (
-                    <EyeOff className="w-4 h-4" />
-                  ) : (
-                    <Eye className="w-4 h-4" />
-                  )}
-                  <span>{slide.active ? "Ocultar" : "Mostrar"}</span>
-                </button>
               </div>
             </div>
           </div>

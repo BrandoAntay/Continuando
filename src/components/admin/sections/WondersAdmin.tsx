@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { Plus, Edit, Trash2, EyeOff, Eye, Upload, Globe } from "lucide-react";
+import { Plus, Edit, Trash2, Upload, Globe } from "lucide-react";
 import type { Wonder } from "@/lib/adminStorage";
 
 export const WondersAdmin = () => {
@@ -87,13 +87,6 @@ export const WondersAdmin = () => {
 
   const handleDelete = (id: number) => {
     remove(id);
-  };
-
-  const handleToggleActive = (id: number) => {
-    const wonder = wonders.find((w) => w.id === id);
-    if (wonder) {
-      update(id, { active: !wonder.active });
-    }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -234,7 +227,7 @@ export const WondersAdmin = () => {
         {wonders.map((wonder) => (
           <div
             key={wonder.id}
-            className={`bg-white rounded-lg shadow-lg overflow-hidden ${!wonder.active ? "opacity-50" : ""}`}
+            className="bg-white rounded-lg shadow-lg overflow-hidden"
           >
             <img
               src={wonder.image}
@@ -282,17 +275,6 @@ export const WondersAdmin = () => {
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-                <button
-                  onClick={() => handleToggleActive(wonder.id)}
-                  className={`flex-1 text-white text-sm py-2 px-3 rounded flex items-center justify-center space-x-1 ${wonder.active ? "bg-gray-500 hover:bg-gray-600" : "bg-green-500 hover:bg-green-600"}`}
-                >
-                  {wonder.active ? (
-                    <EyeOff className="w-4 h-4" />
-                  ) : (
-                    <Eye className="w-4 h-4" />
-                  )}
-                  <span>{wonder.active ? "Ocultar" : "Mostrar"}</span>
-                </button>
               </div>
             </div>
           </div>

@@ -24,7 +24,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { Plus, Edit, Trash2, EyeOff, Eye, Upload, Users } from "lucide-react";
+import { Plus, Edit, Trash2, Upload, Users } from "lucide-react";
 import type { GroupImage } from "@/lib/adminStorage";
 
 export const GroupsAdmin = () => {
@@ -79,13 +79,6 @@ export const GroupsAdmin = () => {
 
   const handleDelete = (id: number) => {
     remove(id);
-  };
-
-  const handleToggleActive = (id: number) => {
-    const image = groupImages.find((img) => img.id === id);
-    if (image) {
-      update(id, { active: !image.active });
-    }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -193,7 +186,7 @@ export const GroupsAdmin = () => {
         {groupImages.map((image) => (
           <div
             key={image.id}
-            className={`bg-white rounded-lg shadow-lg overflow-hidden ${!image.active ? "opacity-50" : ""}`}
+            className="bg-white rounded-lg shadow-lg overflow-hidden"
           >
             <img
               src={image.image}
@@ -238,17 +231,6 @@ export const GroupsAdmin = () => {
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-                <button
-                  onClick={() => handleToggleActive(image.id)}
-                  className={`flex-1 text-white text-sm py-2 px-3 rounded flex items-center justify-center space-x-1 ${image.active ? "bg-gray-500 hover:bg-gray-600" : "bg-green-500 hover:bg-green-600"}`}
-                >
-                  {image.active ? (
-                    <EyeOff className="w-4 h-4" />
-                  ) : (
-                    <Eye className="w-4 h-4" />
-                  )}
-                  <span>{image.active ? "Ocultar" : "Mostrar"}</span>
-                </button>
               </div>
             </div>
           </div>
