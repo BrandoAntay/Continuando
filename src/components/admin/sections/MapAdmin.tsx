@@ -1,28 +1,14 @@
 import { useState } from "react";
 import { useMapData } from "@/hooks/useAdminData";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
-import { Edit, EyeOff, Upload, Map } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Edit, EyeOff, Eye, Upload } from "lucide-react";
 
 export const MapAdmin = () => {
   const { mapData, update, toggleActive } = useMapData();
@@ -31,13 +17,17 @@ export const MapAdmin = () => {
     image: "",
   });
 
-  const handleEdit = () => {
+  const handleImageChange = () => {
     if (mapData) {
       setFormData({
         image: mapData.image,
       });
       setIsEditModalOpen(true);
     }
+  };
+
+  const handleToggleActive = () => {
+    toggleActive();
   };
 
   const handleUpdate = () => {
@@ -66,7 +56,6 @@ export const MapAdmin = () => {
     return (
       <div className="space-y-6">
         <div className="text-center py-12">
-          <Map className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-gray-600 mb-2">
             No hay datos del mapa
           </h2>
@@ -88,93 +77,56 @@ export const MapAdmin = () => {
         </p>
       </div>
 
-      {/* Card del mapa */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Map className="w-5 h-5 text-blue-600" />
-            <span>Imagen del Mapa</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div
-            className={cn(
-              "flex items-center space-x-4 p-4 border rounded-lg",
-              mapData.active
-                ? "bg-white border-gray-200"
-                : "bg-gray-100 border-gray-300",
-            )}
-          >
-            <img
-              src={mapData.image}
-              alt="Mapa del parque"
-              className={cn(
-                "w-24 h-24 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity",
-                !mapData.active && "grayscale",
-              )}
-              onClick={() =>
-                window.open(
-                  `/mapa-grande?img=${encodeURIComponent(mapData.image)}`,
-                  "_blank",
-                )
-              }
-            />
-            <div className="flex-1">
-              <h4 className="font-medium text-gray-900">Mapa del Parque</h4>
-              <p className="text-sm text-gray-600">
-                Imagen principal del mapa del parque zonal
-              </p>
-              <p
-                className={cn(
-                  "text-xs mt-1",
-                  mapData.active ? "text-green-600" : "text-gray-500",
-                )}
-              >
-                Estado: {mapData.active ? "Visible" : "Oculto"}
-              </p>
-            </div>
-            <div className="flex space-x-2">
-              <Button size="sm" variant="outline" onClick={handleEdit}>
-                <Edit className="w-4 h-4" />
-                Editar
-              </Button>
+      {/* Card design */}
+      <div className="max-w-2xl">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+          <img
+            src={mapData.image || "/placeholder.svg"}
+            alt="Mapa del Parque"
+            className={`w-full h-64 object-cover ${!mapData.active ? "opacity-50" : ""}`}
+            onError={(e) => {
+              e.currentTarget.src = "/placeholder.svg";
+            }}
+          />
+          <div className="p-6">
+            <h3 className="text-lg font-bold text-park-blue mb-4">
+              Mapa Actual del Parque
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Esta es la imagen que se muestra en la sección "Mapa del Parque"
+              de la homepage.
+            </p>
 
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button size="sm" variant="outline">
-                    <EyeOff className="w-4 h-4" />
-                    Desactivar
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      {mapData.active ? "¿Desactivar mapa?" : "¿Activar mapa?"}
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      {mapData.active
-                        ? "La imagen se desactivará y no se mostrará en la sección Mapa del Parque. Se colocará de color gris."
-                        : "La imagen volverá a mostrarse en la sección Mapa del Parque."}
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction onClick={toggleActive}>
-                      Confirmar
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+            <div className="flex space-x-4">
+              <button
+                onClick={handleImageChange}
+                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg flex items-center space-x-2 transition-colors"
+              >
+                <Edit className="w-5 h-5" />
+                <span>Cambiar Imagen</span>
+              </button>
+
+              <button
+                onClick={handleToggleActive}
+                className={`font-semibold py-2 px-4 rounded-lg flex items-center space-x-2 transition-colors ${mapData.active ? "bg-gray-500 hover:bg-gray-600 text-white" : "bg-green-500 hover:bg-green-600 text-white"}`}
+              >
+                {mapData.active ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+                <span>{mapData.active ? "Desactivar" : "Activar"}</span>
+              </button>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Modal de edición */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Editar Mapa del Parque</DialogTitle>
+            <DialogTitle>Cambiar Imagen del Mapa</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             {/* Vista de imagen actual */}
