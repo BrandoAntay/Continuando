@@ -39,7 +39,6 @@ export interface PriceOption {
 export interface GroupImage {
   id: number;
   image: string;
-  alt: string;
   caption: string;
   active: boolean;
 }
@@ -268,28 +267,24 @@ const INITIAL_DATA: AdminData = {
     {
       id: 1,
       image: "/placeholder.svg",
-      alt: "Grupo disfrutando en el parque",
       caption: "Diversión familiar garantizada",
       active: true,
     },
     {
       id: 2,
       image: "/placeholder.svg",
-      alt: "Actividades en el zoológico",
       caption: "Experiencias educativas únicas",
       active: true,
     },
     {
       id: 3,
       image: "/placeholder.svg",
-      alt: "Zonas deportivas del parque",
       caption: "Espacios deportivos amplios",
       active: true,
     },
     {
       id: 4,
       image: "/placeholder.svg",
-      alt: "Área de picnic grupal",
       caption: "Perfectos para celebraciones",
       active: true,
     },

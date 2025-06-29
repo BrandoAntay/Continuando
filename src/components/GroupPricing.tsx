@@ -14,7 +14,6 @@ export const GroupPricing = () => {
   const carouselImages = adminImages.map((image) => ({
     id: image.id,
     src: image.image,
-    alt: image.alt,
     caption: image.caption,
   }));
 
@@ -161,7 +160,7 @@ export const GroupPricing = () => {
                   >
                     <img
                       src={image.src}
-                      alt={image.alt}
+                      alt=""
                       className="w-full h-full object-cover"
                       style={{ backgroundColor: "#f29200" }}
                     />

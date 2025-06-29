@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { Plus, Edit, Trash2, EyeOff, Upload, Camera } from "lucide-react";
+import { Plus, Edit, Trash2, Upload, Camera } from "lucide-react";
 import type { HeroSlide } from "@/lib/adminStorage";
 
 export const HeroCarouselAdmin = () => {
@@ -222,82 +222,72 @@ export const HeroCarouselAdmin = () => {
         </Dialog>
       </div>
 
-      {/* Lista de imágenes */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Camera className="w-5 h-5 text-blue-600" />
-            <span>Lista de Imágenes del Carrusel</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {slides.map((slide) => (
-              <div
-                key={slide.id}
-                className="flex items-center space-x-4 p-4 border rounded-lg bg-white border-gray-200"
-              >
-                <img
-                  src={slide.image}
-                  alt={slide.title}
-                  className="w-16 h-16 object-cover rounded"
-                />
-                <div className="flex-1">
-                  <h4 className="font-medium text-gray-900">{slide.title}</h4>
-                  <p className="text-sm text-gray-600">{slide.subtitle}</p>
-                  <p className="text-xs text-gray-500 mt-1 line-clamp-2">
-                    {slide.description}
-                  </p>
-                </div>
-                <div className="flex space-x-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleEdit(slide)}
-                  >
-                    <Edit className="w-4 h-4" />
-                    Editar
-                  </Button>
+      {/* Lista de slides */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {slides.map((slide) => (
+          <div
+            key={slide.id}
+            className="bg-white rounded-lg shadow-lg overflow-hidden"
+          >
+            <img
+              src={slide.image}
+              alt={slide.title}
+              className="w-full h-48 object-cover"
+            />
+            <div className="p-4">
+              <p className="text-sm text-park-orange mb-2">{slide.subtitle}</p>
+              <h3 className="font-bold text-park-blue mb-2">{slide.title}</h3>
+              <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                {slide.description}
+              </p>
 
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button size="sm" variant="destructive">
-                        <Trash2 className="w-4 h-4" />
+              {/* Botones de acción */}
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => handleEdit(slide)}
+                  className="flex-1 bg-blue-500 hover:bg-blue-600 text-white text-sm py-2 px-3 rounded flex items-center justify-center space-x-1"
+                >
+                  <Edit className="w-4 h-4" />
+                  <span>Editar</span>
+                </button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <button className="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm py-2 px-3 rounded flex items-center justify-center space-x-1">
+                      <Trash2 className="w-4 h-4" />
+                      <span>Eliminar</span>
+                    </button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>¿Eliminar imagen?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Esta acción no se puede deshacer. La imagen se eliminará
+                        permanentemente.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => handleDelete(slide.id)}
+                        className="bg-red-600 hover:bg-red-700"
+                      >
                         Eliminar
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>¿Eliminar imagen?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Esta acción no se puede deshacer. La imagen se
-                          eliminará permanentemente.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleDelete(slide.id)}
-                          className="bg-red-600 hover:bg-red-700"
-                        >
-                          Eliminar
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
-            ))}
-
-            {slides.length === 0 && (
-              <div className="text-center py-8 text-gray-500">
-                No hay imágenes en el carrusel. Haz clic en "Agregar" para
-                añadir la primera imagen.
-              </div>
-            )}
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        ))}
+      </div>
+
+      {slides.length === 0 && (
+        <div className="text-center py-8 text-gray-500">
+          No hay imágenes en el carrusel. Haz clic en "Agregar" para añadir la
+          primera imagen.
+        </div>
+      )}
 
       {/* Modal de edición */}
       <Dialog

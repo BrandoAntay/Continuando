@@ -24,7 +24,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { Plus, Edit, Trash2, EyeOff, Upload, Users } from "lucide-react";
+import { Plus, Edit, Trash2, Upload, Users } from "lucide-react";
 import type { GroupImage } from "@/lib/adminStorage";
 
 export const GroupsAdmin = () => {
@@ -33,24 +33,21 @@ export const GroupsAdmin = () => {
   const [editingImage, setEditingImage] = useState<GroupImage | null>(null);
   const [formData, setFormData] = useState({
     image: "",
-    alt: "",
     caption: "",
   });
 
   const resetForm = () => {
     setFormData({
       image: "",
-      alt: "",
       caption: "",
     });
   };
 
   const handleAdd = () => {
-    if (!formData.image || !formData.alt || !formData.caption) return;
+    if (!formData.image || !formData.caption) return;
 
     add({
       image: formData.image,
-      alt: formData.alt,
       caption: formData.caption,
       active: true,
     });
@@ -63,18 +60,15 @@ export const GroupsAdmin = () => {
     setEditingImage(image);
     setFormData({
       image: image.image,
-      alt: image.alt,
       caption: image.caption,
     });
   };
 
   const handleUpdate = () => {
-    if (!editingImage || !formData.image || !formData.alt || !formData.caption)
-      return;
+    if (!editingImage || !formData.image || !formData.caption) return;
 
     update(editingImage.id, {
       image: formData.image,
-      alt: formData.alt,
       caption: formData.caption,
       active: editingImage.active,
     });
@@ -147,19 +141,6 @@ export const GroupsAdmin = () => {
                 </div>
               </div>
 
-              {/* Campo Alt */}
-              <div className="space-y-2">
-                <Label htmlFor="alt-add">Texto alternativo</Label>
-                <Input
-                  id="alt-add"
-                  value={formData.alt}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, alt: e.target.value }))
-                  }
-                  placeholder="Descripción de la imagen para accesibilidad"
-                />
-              </div>
-
               {/* Campo Caption */}
               <div className="space-y-2">
                 <Label htmlFor="caption-add">Texto de la imagen</Label>
@@ -189,9 +170,7 @@ export const GroupsAdmin = () => {
                 </Button>
                 <Button
                   onClick={handleAdd}
-                  disabled={
-                    !formData.image || !formData.alt || !formData.caption
-                  }
+                  disabled={!formData.image || !formData.caption}
                   className="bg-blue-600 hover:bg-blue-700"
                 >
                   Agregar
@@ -203,78 +182,66 @@ export const GroupsAdmin = () => {
       </div>
 
       {/* Lista de imágenes */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Users className="w-5 h-5 text-blue-600" />
-            <span>Lista de Imágenes del Carrusel Pequeño</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {groupImages.map((image) => (
-              <div
-                key={image.id}
-                className="flex items-center space-x-4 p-4 border rounded-lg bg-white border-gray-200"
-              >
-                <img
-                  src={image.image}
-                  alt={image.alt}
-                  className="w-16 h-16 object-cover rounded"
-                />
-                <div className="flex-1">
-                  <h4 className="font-medium text-gray-900">{image.alt}</h4>
-                  <p className="text-sm text-gray-600">{image.caption}</p>
-                </div>
-                <div className="flex space-x-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleEdit(image)}
-                  >
-                    <Edit className="w-4 h-4" />
-                    Editar
-                  </Button>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {groupImages.map((image) => (
+          <div
+            key={image.id}
+            className="bg-white rounded-lg shadow-lg overflow-hidden"
+          >
+            <img
+              src={image.image}
+              alt=""
+              className="w-full h-48 object-cover"
+            />
+            <div className="p-4">
+              <h3 className="font-bold text-park-blue mb-4">{image.caption}</h3>
 
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button size="sm" variant="destructive">
-                        <Trash2 className="w-4 h-4" />
+              {/* Botones de acción */}
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => handleEdit(image)}
+                  className="flex-1 bg-blue-500 hover:bg-blue-600 text-white text-sm py-2 px-3 rounded flex items-center justify-center space-x-1"
+                >
+                  <Edit className="w-4 h-4" />
+                  <span>Editar</span>
+                </button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <button className="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm py-2 px-3 rounded flex items-center justify-center space-x-1">
+                      <Trash2 className="w-4 h-4" />
+                      <span>Eliminar</span>
+                    </button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>¿Eliminar imagen?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Esta acción no se puede deshacer. La imagen se eliminará
+                        permanentemente.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => handleDelete(image.id)}
+                        className="bg-red-600 hover:bg-red-700"
+                      >
                         Eliminar
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>¿Eliminar imagen?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Esta acción no se puede deshacer. La imagen se
-                          eliminará permanentemente.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleDelete(image.id)}
-                          className="bg-red-600 hover:bg-red-700"
-                        >
-                          Eliminar
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
-            ))}
-
-            {groupImages.length === 0 && (
-              <div className="text-center py-8 text-gray-500">
-                No hay imágenes. Haz clic en "Agregar" para añadir la primera
-                imagen.
-              </div>
-            )}
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        ))}
+      </div>
+
+      {groupImages.length === 0 && (
+        <div className="text-center py-8 text-gray-500">
+          No hay imágenes. Haz clic en "Agregar" para añadir la primera imagen.
+        </div>
+      )}
 
       {/* Modal de edición */}
       <Dialog
@@ -317,19 +284,6 @@ export const GroupsAdmin = () => {
               </div>
             </div>
 
-            {/* Campo Alt */}
-            <div className="space-y-2">
-              <Label htmlFor="alt-edit">Texto alternativo</Label>
-              <Input
-                id="alt-edit"
-                value={formData.alt}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, alt: e.target.value }))
-                }
-                placeholder="Descripción de la imagen para accesibilidad"
-              />
-            </div>
-
             {/* Campo Caption */}
             <div className="space-y-2">
               <Label htmlFor="caption-edit">Texto de la imagen</Label>
@@ -356,7 +310,7 @@ export const GroupsAdmin = () => {
               </Button>
               <Button
                 onClick={handleUpdate}
-                disabled={!formData.image || !formData.alt || !formData.caption}
+                disabled={!formData.image || !formData.caption}
                 className="bg-blue-600 hover:bg-blue-700"
               >
                 Actualizar

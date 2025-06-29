@@ -23,7 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { Plus, Edit, Trash2, EyeOff, DollarSign } from "lucide-react";
+import { Plus, Edit, Trash2, DollarSign } from "lucide-react";
 import type { PriceOption } from "@/lib/adminStorage";
 
 const colorOptions = [
@@ -236,86 +236,75 @@ export const PricingAdmin = () => {
       </div>
 
       {/* Lista de cards */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <DollarSign className="w-5 h-5 text-blue-600" />
-            <span>Lista de Cards de Precios</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {priceOptions.map((option) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {priceOptions.map((option) => (
+          <div
+            key={option.id}
+            className="bg-white rounded-lg shadow-lg overflow-hidden"
+          >
+            <div className="p-4 text-center">
               <div
-                key={option.id}
-                className="flex items-center space-x-4 p-4 border rounded-lg bg-white border-gray-200"
+                className="w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-sm mx-auto mb-3"
+                style={{ backgroundColor: option.color }}
               >
-                <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm"
-                  style={{ backgroundColor: option.color }}
+                {formatPrice(option.price)}
+              </div>
+              <h3 className="font-bold text-park-blue mb-2">
+                {option.category}
+              </h3>
+              <p className="text-sm text-gray-600 mb-2">{option.ageRange}</p>
+              {option.description && (
+                <p className="text-xs text-gray-500 mb-4">
+                  {option.description}
+                </p>
+              )}
+
+              {/* Botones de acción */}
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => handleEdit(option)}
+                  className="flex-1 bg-blue-500 hover:bg-blue-600 text-white text-sm py-2 px-3 rounded flex items-center justify-center space-x-1"
                 >
-                  {formatPrice(option.price)}
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-medium text-gray-900">
-                    {option.category}
-                  </h4>
-                  <p className="text-sm text-gray-600">{option.ageRange}</p>
-                  {option.description && (
-                    <p className="text-xs text-gray-500 mt-1">
-                      {option.description}
-                    </p>
-                  )}
-                </div>
-                <div className="flex space-x-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleEdit(option)}
-                  >
-                    <Edit className="w-4 h-4" />
-                    Editar
-                  </Button>
-
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button size="sm" variant="destructive">
-                        <Trash2 className="w-4 h-4" />
+                  <Edit className="w-4 h-4" />
+                  <span>Editar</span>
+                </button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <button className="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm py-2 px-3 rounded flex items-center justify-center space-x-1">
+                      <Trash2 className="w-4 h-4" />
+                      <span>Eliminar</span>
+                    </button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>¿Eliminar card?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Esta acción no se puede deshacer. La card se eliminará
+                        permanentemente.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => handleDelete(option.id)}
+                        className="bg-red-600 hover:bg-red-700"
+                      >
                         Eliminar
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>¿Eliminar card?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Esta acción no se puede deshacer. La card se eliminará
-                          permanentemente.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleDelete(option.id)}
-                          className="bg-red-600 hover:bg-red-700"
-                        >
-                          Eliminar
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
-            ))}
-
-            {priceOptions.length === 0 && (
-              <div className="text-center py-8 text-gray-500">
-                No hay precios. Haz clic en "Agregar" para añadir el primer
-                precio.
-              </div>
-            )}
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        ))}
+      </div>
+
+      {priceOptions.length === 0 && (
+        <div className="text-center py-8 text-gray-500">
+          No hay precios. Haz clic en "Agregar" para añadir el primer precio.
+        </div>
+      )}
 
       {/* Modal de edición */}
       <Dialog
