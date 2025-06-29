@@ -24,7 +24,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { Plus, Edit, Trash2, EyeOff, Upload, PawPrint } from "lucide-react";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  EyeOff,
+  Eye,
+  Upload,
+  PawPrint,
+} from "lucide-react";
 import type { Animal } from "@/lib/adminStorage";
 
 export const ZooAdmin = () => {
@@ -85,6 +93,13 @@ export const ZooAdmin = () => {
 
   const handleDelete = (id: number) => {
     remove(id);
+  };
+
+  const handleToggleActive = (id: number) => {
+    const animal = animals.find((a) => a.id === id);
+    if (animal) {
+      update(id, { active: !animal.active });
+    }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -222,83 +237,83 @@ export const ZooAdmin = () => {
       </div>
 
       {/* Lista de tarjetas */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <PawPrint className="w-5 h-5 text-blue-600" />
-            <span>Lista de Tarjetas de Animales</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {animals.map((animal) => (
-              <div
-                key={animal.id}
-                className="flex items-center space-x-4 p-4 border rounded-lg bg-white border-gray-200"
-              >
-                <img
-                  src={animal.image}
-                  alt={animal.name}
-                  className="w-16 h-16 object-cover rounded"
-                />
-                <div className="flex-1">
-                  <h4 className="font-medium text-gray-900">{animal.name}</h4>
-                  <p className="text-sm text-gray-600 italic">
-                    {animal.scientificName}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1 line-clamp-2">
-                    {animal.description}
-                  </p>
-                </div>
-                <div className="flex space-x-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleEdit(animal)}
-                  >
-                    <Edit className="w-4 h-4" />
-                    Editar
-                  </Button>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {animals.map((animal) => (
+          <div
+            key={animal.id}
+            className={`bg-white rounded-lg shadow-lg overflow-hidden ${!animal.active ? "opacity-50" : ""}`}
+          >
+            <img
+              src={animal.image}
+              alt={animal.name}
+              className="w-full h-48 object-cover"
+            />
+            <div className="p-4">
+              <h3 className="font-bold text-park-blue mb-2">{animal.name}</h3>
+              <p className="text-sm text-park-orange italic mb-2">
+                {animal.scientificName}
+              </p>
+              <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                {animal.description}
+              </p>
 
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button size="sm" variant="destructive">
-                        <Trash2 className="w-4 h-4" />
+              {/* Botones de acción */}
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => handleEdit(animal)}
+                  className="flex-1 bg-blue-500 hover:bg-blue-600 text-white text-sm py-2 px-3 rounded flex items-center justify-center space-x-1"
+                >
+                  <Edit className="w-4 h-4" />
+                  <span>Editar</span>
+                </button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <button className="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm py-2 px-3 rounded flex items-center justify-center space-x-1">
+                      <Trash2 className="w-4 h-4" />
+                      <span>Eliminar</span>
+                    </button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>¿Eliminar tarjeta?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Esta acción no se puede deshacer. La tarjeta se
+                        eliminará permanentemente.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => handleDelete(animal.id)}
+                        className="bg-red-600 hover:bg-red-700"
+                      >
                         Eliminar
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>¿Eliminar tarjeta?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Esta acción no se puede deshacer. La tarjeta se
-                          eliminará permanentemente.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleDelete(animal.id)}
-                          className="bg-red-600 hover:bg-red-700"
-                        >
-                          Eliminar
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+                <button
+                  onClick={() => handleToggleActive(animal.id)}
+                  className={`flex-1 text-white text-sm py-2 px-3 rounded flex items-center justify-center space-x-1 ${animal.active ? "bg-gray-500 hover:bg-gray-600" : "bg-green-500 hover:bg-green-600"}`}
+                >
+                  {animal.active ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                  <span>{animal.active ? "Ocultar" : "Mostrar"}</span>
+                </button>
               </div>
-            ))}
-
-            {animals.length === 0 && (
-              <div className="text-center py-8 text-gray-500">
-                No hay animales. Haz clic en "Agregar" para añadir el primer
-                animal.
-              </div>
-            )}
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        ))}
+      </div>
+
+      {animals.length === 0 && (
+        <div className="text-center py-8 text-gray-500">
+          No hay animales. Haz clic en "Agregar" para añadir el primer animal.
+        </div>
+      )}
 
       {/* Modal de edición */}
       <Dialog
