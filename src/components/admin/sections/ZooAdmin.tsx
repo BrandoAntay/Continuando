@@ -407,7 +407,6 @@ export const ZooAdmin = () => {
               <Button
                 variant="outline"
                 onClick={() => {
-                  resetForm();
                   setEditingAnimal(null);
                 }}
               >

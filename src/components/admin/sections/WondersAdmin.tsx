@@ -381,7 +381,6 @@ export const WondersAdmin = () => {
               <Button
                 variant="outline"
                 onClick={() => {
-                  resetForm();
                   setEditingWonder(null);
                 }}
               >
