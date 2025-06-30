@@ -151,9 +151,12 @@ export const MapAdmin = () => {
                     accept="image/*"
                     onChange={handleImageUpload}
                     className="hidden"
-                    id="image-upload-edit"
+                    id="map-image-upload-edit"
                   />
-                  <label htmlFor="image-upload-edit" className="cursor-pointer">
+                  <label
+                    htmlFor="map-image-upload-edit"
+                    className="cursor-pointer"
+                  >
                     <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                     <p className="text-sm text-gray-600">
                       Haz clic para seleccionar una nueva imagen del mapa

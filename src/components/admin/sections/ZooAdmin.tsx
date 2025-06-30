@@ -147,10 +147,10 @@ export const ZooAdmin = () => {
                       accept="image/*"
                       onChange={handleImageUpload}
                       className="hidden"
-                      id="image-upload-add"
+                      id="zoo-image-upload-add"
                     />
                     <label
-                      htmlFor="image-upload-add"
+                      htmlFor="zoo-image-upload-add"
                       className="cursor-pointer"
                     >
                       <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
@@ -340,9 +340,12 @@ export const ZooAdmin = () => {
                     accept="image/*"
                     onChange={handleImageUpload}
                     className="hidden"
-                    id="image-upload-edit"
+                    id="zoo-image-upload-edit"
                   />
-                  <label htmlFor="image-upload-edit" className="cursor-pointer">
+                  <label
+                    htmlFor="zoo-image-upload-edit"
+                    className="cursor-pointer"
+                  >
                     <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                     <p className="text-sm text-gray-600">
                       Haz clic para cambiar la imagen
