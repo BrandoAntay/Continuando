@@ -318,7 +318,12 @@ export const ZooAdmin = () => {
       {/* Modal de edición */}
       <Dialog
         open={!!editingAnimal}
-        onOpenChange={(open) => !open && setEditingAnimal(null)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setEditingAnimal(null);
+            resetForm();
+          }
+        }}
       >
         <DialogContent className="max-w-2xl">
           <DialogHeader>

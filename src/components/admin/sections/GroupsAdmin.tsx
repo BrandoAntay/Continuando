@@ -246,7 +246,12 @@ export const GroupsAdmin = () => {
       {/* Modal de edición */}
       <Dialog
         open={!!editingImage}
-        onOpenChange={(open) => !open && setEditingImage(null)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setEditingImage(null);
+            resetForm();
+          }
+        }}
       >
         <DialogContent className="max-w-2xl">
           <DialogHeader>

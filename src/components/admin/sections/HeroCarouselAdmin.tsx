@@ -292,7 +292,12 @@ export const HeroCarouselAdmin = () => {
       {/* Modal de edición */}
       <Dialog
         open={!!editingSlide}
-        onOpenChange={(open) => !open && setEditingSlide(null)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setEditingSlide(null);
+            resetForm();
+          }
+        }}
       >
         <DialogContent className="max-w-2xl">
           <DialogHeader>

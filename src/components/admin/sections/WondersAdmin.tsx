@@ -291,7 +291,12 @@ export const WondersAdmin = () => {
       {/* Modal de edición */}
       <Dialog
         open={!!editingWonder}
-        onOpenChange={(open) => !open && setEditingWonder(null)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setEditingWonder(null);
+            resetForm();
+          }
+        }}
       >
         <DialogContent className="max-w-2xl">
           <DialogHeader>
