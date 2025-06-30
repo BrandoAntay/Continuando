@@ -128,10 +128,10 @@ export const HeroCarouselAdmin = () => {
                       accept="image/*"
                       onChange={handleImageUpload}
                       className="hidden"
-                      id="image-upload-add"
+                      id="hero-image-upload-add"
                     />
                     <label
-                      htmlFor="image-upload-add"
+                      htmlFor="hero-image-upload-add"
                       className="cursor-pointer"
                     >
                       <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
@@ -314,9 +314,12 @@ export const HeroCarouselAdmin = () => {
                     accept="image/*"
                     onChange={handleImageUpload}
                     className="hidden"
-                    id="image-upload-edit"
+                    id="hero-image-upload-edit"
                   />
-                  <label htmlFor="image-upload-edit" className="cursor-pointer">
+                  <label
+                    htmlFor="hero-image-upload-edit"
+                    className="cursor-pointer"
+                  >
                     <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                     <p className="text-sm text-gray-600">
                       Haz clic para cambiar la imagen
