@@ -274,13 +274,6 @@ export const WondersSection = () => {
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
-
-        {/* Indicador de deslizamiento */}
-        <div className="text-center mt-8">
-          <p className="text-sm text-gray-500">
-            Desliza horizontalmente para ver más maravillas
-          </p>
-        </div>
       </div>
     </section>
   );
