@@ -10,12 +10,14 @@ export const GroupPricing = () => {
   const [dragDistance, setDragDistance] = useState(0);
   const { groupImages: adminImages } = useGroupImages();
 
-  // Mostrar todas las imágenes del carrusel
-  const carouselImages = adminImages.map((image) => ({
-    id: image.id,
-    src: image.image,
-    caption: image.caption,
-  }));
+  // Mostrar solo las imágenes activas del carrusel
+  const carouselImages = adminImages
+    .filter((image) => image.active)
+    .map((image) => ({
+      id: image.id,
+      src: image.image,
+      caption: image.caption,
+    }));
 
   useEffect(() => {
     if (carouselImages.length === 0) return;

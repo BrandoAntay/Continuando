@@ -30,8 +30,8 @@ export const WondersSection = () => {
   const [hasMoved, setHasMoved] = useState(false);
   const { wonders: allWonders } = useWonders();
 
-  // Mostrar todas las maravillas
-  const wonders: Wonder[] = allWonders;
+  // Mostrar solo las maravillas activas
+  const wonders: Wonder[] = allWonders.filter((wonder) => wonder.active);
 
   /**
    * Inicia el proceso de arrastre del carrusel

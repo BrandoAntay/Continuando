@@ -19,8 +19,8 @@ export const ZooSection = () => {
   );
   const { animals: adminAnimals } = useAnimals();
 
-  // Mostrar todos los animales
-  const allAnimals: Animal[] = adminAnimals;
+  // Mostrar solo los animales activos
+  const allAnimals: Animal[] = adminAnimals.filter((animal) => animal.active);
 
   // Responsive animals per page: 6 on desktop, 3 on mobile/tablet
   const getAnimalsPerPage = () => {
