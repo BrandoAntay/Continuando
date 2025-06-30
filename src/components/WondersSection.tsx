@@ -28,19 +28,30 @@ export const WondersSection = () => {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const [hasMoved, setHasMoved] = useState(false);
+  const [isSnapping, setIsSnapping] = useState(false);
   const { wonders: allWonders } = useWonders();
 
   // Mostrar solo las maravillas activas
   const wonders: Wonder[] = allWonders.filter((wonder) => wonder.active);
 
   /**
-   * Inicia el proceso de arrastre del carrusel
+   * Inicia el proceso de arrastre del carrusel (mouse)
    */
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsDragging(true);
     setHasMoved(false);
     setStartX(e.pageX);
+    setScrollLeft(carouselRef.current?.scrollLeft || 0);
+  };
+
+  /**
+   * Inicia el proceso de arrastre del carrusel (touch)
+   */
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsDragging(true);
+    setHasMoved(false);
+    setStartX(e.touches[0].pageX);
     setScrollLeft(carouselRef.current?.scrollLeft || 0);
   };
 
@@ -58,11 +69,55 @@ export const WondersSection = () => {
   };
 
   /**
+   * Encuentra la card más cercana al centro y hace snap a ella
+   */
+  const snapToCenter = () => {
+    if (!carouselRef.current || wonders.length === 0) return;
+
+    setIsSnapping(true);
+    const container = carouselRef.current;
+    const containerWidth = container.clientWidth;
+    const containerScrollLeft = container.scrollLeft;
+    const containerCenter = containerScrollLeft + containerWidth / 2;
+
+    // Calcular el ancho de cada card (incluye padding y margen)
+    const cardWidth = 384 + 24; // w-96 (384px) + space-x-6 (24px)
+    const paddingLeft = 48; // px-12 (48px)
+
+    // Encontrar la card más cercana al centro
+    let closestIndex = 0;
+    let minDistance = Infinity;
+
+    wonders.forEach((_, index) => {
+      const cardCenter = paddingLeft + index * cardWidth + cardWidth / 2;
+      const distance = Math.abs(containerCenter - cardCenter);
+
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestIndex = index;
+      }
+    });
+
+    // Calcular la posición de scroll para centrar la card
+    const targetCardCenter =
+      paddingLeft + closestIndex * cardWidth + cardWidth / 2;
+    const targetScrollLeft = targetCardCenter - containerWidth / 2;
+
+    container.scrollTo({
+      left: Math.max(0, targetScrollLeft),
+      behavior: "smooth",
+    });
+
+    // Reset snapping state after animation
+    setTimeout(() => setIsSnapping(false), 500);
+  };
+
+  /**
    * Navega el carrusel hacia la dirección especificada
    */
   const scrollCarousel = (direction: "left" | "right") => {
     if (!carouselRef.current) return;
-    const scrollAmount = 320;
+    const scrollAmount = 408; // Ajustado para el ancho de card + spacing
     const newScrollLeft =
       direction === "left"
         ? carouselRef.current.scrollLeft - scrollAmount
@@ -89,22 +144,49 @@ export const WondersSection = () => {
     const handleGlobalMouseUp = () => {
       if (!isDragging) return;
       setIsDragging(false);
+      // Activar snap automático al soltar
+      if (hasMoved) {
+        setTimeout(() => snapToCenter(), 50);
+      }
+    };
+
+    const handleGlobalTouchMove = (e: TouchEvent) => {
+      if (!isDragging || !carouselRef.current) return;
+      e.preventDefault();
+      setHasMoved(true);
+      const deltaX = e.touches[0].pageX - startX;
+      carouselRef.current.scrollLeft = scrollLeft - deltaX;
+    };
+
+    const handleGlobalTouchEnd = () => {
+      if (!isDragging) return;
+      setIsDragging(false);
+      // Activar snap automático al soltar
+      if (hasMoved) {
+        setTimeout(() => snapToCenter(), 50);
+      }
     };
 
     if (isDragging) {
       document.addEventListener("mousemove", handleGlobalMouseMove);
       document.addEventListener("mouseup", handleGlobalMouseUp);
+      document.addEventListener("touchmove", handleGlobalTouchMove, {
+        passive: false,
+      });
+      document.addEventListener("touchend", handleGlobalTouchEnd);
       document.body.style.userSelect = "none";
       document.body.style.cursor = "grabbing";
 
       return () => {
         document.removeEventListener("mousemove", handleGlobalMouseMove);
         document.removeEventListener("mouseup", handleGlobalMouseUp);
+        document.removeEventListener("touchmove", handleGlobalTouchMove);
+        document.removeEventListener("touchend", handleGlobalTouchEnd);
         document.body.style.userSelect = "";
         document.body.style.cursor = "";
       };
     }
-  }, [isDragging, startX, scrollLeft]);
+  }, [isDragging, startX, scrollLeft, hasMoved]);
 
   return (
     <section id="maravillas" className="py-16 bg-gray-50">
@@ -135,9 +217,15 @@ export const WondersSection = () => {
             className={cn(
               "flex overflow-x-auto scrollbar-hide space-x-6 px-12 select-none py-6",
               isDragging ? "cursor-grabbing" : "cursor-grab",
+              isSnapping && "scroll-smooth",
             )}
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            style={{
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+              scrollBehavior: isSnapping ? "smooth" : "auto",
+            }}
             onMouseDown={handleMouseDown}
+            onTouchStart={handleTouchStart}
           >
             {wonders.map((wonder) => (
               <Card
