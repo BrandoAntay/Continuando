@@ -302,7 +302,6 @@ export const GroupsAdmin = () => {
               <Button
                 variant="outline"
                 onClick={() => {
-                  resetForm();
                   setEditingImage(null);
                 }}
               >

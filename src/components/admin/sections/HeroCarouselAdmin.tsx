@@ -378,7 +378,6 @@ export const HeroCarouselAdmin = () => {
               <Button
                 variant="outline"
                 onClick={() => {
-                  resetForm();
                   setEditingSlide(null);
                 }}
               >
